@@ -404,7 +404,7 @@ bool smoothlyMoveMouse(MMPoint endPoint,double speed)
 		moveMouse(MMSignedPointMake((int32_t)pos.x, (int32_t)pos.y));
 
 		/* Wait 1 - (speed) milliseconds. */
-    if(count >= 4){
+    if(count >= 5){
       microsleep(DEADBEEF_UNIFORM(0.7, speed));
       count = 0;
     }

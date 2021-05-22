@@ -377,9 +377,11 @@ bool smoothlyMoveMouse(MMPoint endPoint,double speed)
 	MMSize screenSize = getMainDisplaySize();
 	double velo_x = 0.0, velo_y = 0.0;
 	double distance;
+  int count = 0;
 
 	while ((distance = crude_hypot((double)pos.x - endPoint.x,
 	                               (double)pos.y - endPoint.y)) > 1.0) {
+    count += 1;
 		double gravity = DEADBEEF_UNIFORM(5.0, 500.0);
 		double veloDistance;
 		velo_x += (gravity * ((double)endPoint.x - pos.x)) / distance;
@@ -390,8 +392,8 @@ bool smoothlyMoveMouse(MMPoint endPoint,double speed)
 		velo_x /= veloDistance;
 		velo_y /= veloDistance;
 
-		pos.x += floor(velo_x + 1);
-		pos.y += floor(velo_y + 1);
+		pos.x += floor(velo_x + 0.5);
+		pos.y += floor(velo_y + 0.5);
 
 		/* Make sure we are in the screen boundaries!
 		 * (Strange things will happen if we are not.) */
@@ -402,7 +404,11 @@ bool smoothlyMoveMouse(MMPoint endPoint,double speed)
 		moveMouse(MMSignedPointMake((int32_t)pos.x, (int32_t)pos.y));
 
 		/* Wait 1 - (speed) milliseconds. */
-		microsleep(DEADBEEF_UNIFORM(0.7, speed));
+    if(count >= 4){
+      microsleep(DEADBEEF_UNIFORM(0.7, speed));
+      count = 0;
+    }
+		
 	}
 
 	return true;
